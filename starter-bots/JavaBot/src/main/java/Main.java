@@ -6,7 +6,6 @@ import com.microsoft.signalr.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.util.*;
 
 public class Main {
@@ -45,7 +44,6 @@ public class Main {
             botService.setBotState(botStateDto);
         }, BotStateDto.class);
 
-
         hubConnection.start().blockingAwait();
 
         Thread.sleep(1000);
@@ -57,12 +55,11 @@ public class Main {
             botService.setShouldQuit(true);
         }, String.class);
 
-
         // This is a blocking call
-//        hubConnection.start().subscribe(()-> {
-//
-//
-//        });
+        // hubConnection.start().subscribe(()-> {
+        //
+        //
+        // });
 
         while (!botService.getShouldQuit()) {
             Thread.sleep(20);
