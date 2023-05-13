@@ -4,11 +4,31 @@ from pprint import pprint
 from GameConnection import connection, send
 from Game import action
 from Game.player import Player
+from RL.customEnvironment import Environment
 
 if __name__ == "__main__":
     game_conn, state = connection.start()
 
+    # Agent
     melkMan = Player()
+    # Environment with agent
+    env = Environment(melkMan)
+
+    # Perform 10 runs
+    runs = 10
+    for run in range(1, runs+1):
+        state = env.reset()
+        done = False
+        score = 0
+
+        while not done:
+            env.render()
+            action = env.action_space.sample()
+            n_state, reward, done, info = env.step(action, state, game_conn)
+            score += reward
+            
+        print('Episode:{} Score:{}'.format(run, score))
+
     # Main run loop is here!
     try:
         while state.connected:

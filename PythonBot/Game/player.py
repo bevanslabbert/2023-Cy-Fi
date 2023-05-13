@@ -23,3 +23,15 @@ class Player:
 
     def computeNextMove(self):
         return Action.LEFT
+    
+    def _getHeroWindow(self):
+        return self.heroWindow
+
+    def _getCollected(self):
+        return self.collected
+    
+    def _getX(self):
+        return self.x
+
+    def _getY(self):
+        return self.y
