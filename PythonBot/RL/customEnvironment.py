@@ -1,7 +1,7 @@
 import time
 
-import gymnasium as gym
-from gym.space import Discrete, Box
+import gym
+from gym.spaces import Discrete, Box
 from Game.action import Action
 from GameConnection import send
 
