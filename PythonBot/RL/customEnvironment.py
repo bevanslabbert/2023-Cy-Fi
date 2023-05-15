@@ -12,7 +12,11 @@ class Environment(gym.Env):
         # Actions we can take
         self.action_space = Discrete(len(Action))
         # Hero window
-        self.observation_space = Box()
+        self.observation_space = spaces.Dict({
+            'x': spaces.Discrete(10000),
+            'y': spaces.Discrete(10000),
+            'level': spaces.Discrete(5)
+        })
         # Start state
         self.state = player._getHeroWindow()
         pass
