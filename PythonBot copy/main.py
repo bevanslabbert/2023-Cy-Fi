@@ -9,10 +9,8 @@ from RL.customEnvironment import Environment
 if __name__ == "__main__":
     game_conn, state = connection.start()
 
-    # Agent
-    melkMan = Player(state)
     # Environment with agent
-    env = Environment(melkMan)
+    env = Environment(state.bot_state)
 
     # Perform 10 runs
     runs = 10
@@ -29,20 +27,20 @@ if __name__ == "__main__":
             
         print('Episode:{} Score:{}'.format(run, score))
 
-    # Main run loop is here!
-    try:
-        while state.connected:
-            # Print out the bot state.
-            if state.bot_state != None:
-                print(state.bot_state)
-                melkMan.update(state.bot_state)
+    # # Main run loop is here!
+    # try:
+    #     while state.connected:
+    #         # Print out the bot state.
+    #         if state.bot_state != None:
+    #             print(state.bot_state)
+    #             melkMan.update(state.bot_state)
 
-            time.sleep(1)
+    #         time.sleep(1)
 
-            nextMove = melkMan.computeNextMove()
+    #         nextMove = melkMan.computeNextMove()
 
-            send.send_action(game_conn, action.BotCommand(state.bot_id, nextMove))
+    #         send.send_action(game_conn, action.BotCommand(state.bot_id, nextMove))
 
-    except KeyboardInterrupt:
-        game_conn.stop()
-        sys.exit(0)
+    # except KeyboardInterrupt:
+    #     game_conn.stop()
+    #     sys.exit(0)

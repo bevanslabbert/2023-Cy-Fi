@@ -6,20 +6,24 @@ from Game.action import Action
 from GameConnection import send
 
 class Environment(gym.Env):
-    def __init__(self, player):
-        # Set player as attribute for easy access to environment states
-        self.player = player
+
+    def __init__(self,state):
+
+        self.payload = state
+
         # Actions we can take
         self.action_space = Discrete(len(Action))
+
         # Hero window
         self.observation_space = spaces.Dict({
             'x': spaces.Discrete(10000),
             'y': spaces.Discrete(10000),
             'level': spaces.Discrete(5)
         })
+        
         # Start state
-        self.state = player._getHeroWindow()
-        self.collected = player._getCollected()
+        self.state = state["heroWindow"]
+        self.collected = state["collected"]
         pass
 
     def step(self, action, state, game_conn):
@@ -30,17 +34,20 @@ class Environment(gym.Env):
             time.sleep(0.5)
         
         # If got a collectible, positive reward
-        if(state["collected"] > self.state)
+        if(state.bot_state["collected"] > self.payload["collected"]):
+            reward += 1
 
         # If passed level, positive reward
+        if(state.bot_state["level"] > self.payload["level"]):
+            reward += 100
 
         # If touching hazard, negative reward
 
+
         # Placeholder for info
         info = {}
-        # return state (heroWindow), reward (int), done (bool, terminate?), info(object of info)
+        return state.bot_state["heroWindow"], reward, False, info
 
-        pass
 
     def reset(self):
         # Reset connection to runner, and execute constructor code
