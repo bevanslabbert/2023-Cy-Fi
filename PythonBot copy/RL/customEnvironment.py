@@ -1,5 +1,4 @@
 import time
-
 import gym
 from gym.spaces import Discrete, Box
 from Game.action import Action
@@ -15,7 +14,7 @@ class Environment(gym.Env):
         self.high = 6
 
         # Create a custom observation space
-        self.observation_space = spaces.Box(
+        self.observation_space = Box(
             low=self.low, high=self.high, shape=self.observation_shape, dtype=np.int32
         )
         self.payload = state
