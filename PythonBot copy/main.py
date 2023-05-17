@@ -8,24 +8,27 @@ from RL.customEnvironment import Environment
 
 if __name__ == "__main__":
     game_conn, state = connection.start()
+    while state.connected:
+        if state.bot_state != None:
+            # Environment with agent
+            print(state)
+            env = Environment(state)
 
-    # Environment with agent
-    env = Environment(state.bot_state)
+            # Perform 10 runs
+            runs = 10
+            for run in range(1, runs + 1):
+                # state = env.reset()
+                done = False
+                score = 0
 
-    # Perform 10 runs
-    runs = 10
-    for run in range(1, runs+1):
-        state = env.reset()
-        done = False
-        score = 0
+                while not done:
+                    # env.render()
+                    time.sleep(1)
+                    action = env.action_space.sample()
+                    n_state, reward, done, info = env.step(action, state, game_conn)
+                    score += reward
 
-        while not done:
-            env.render()
-            action = env.action_space.sample()
-            n_state, reward, done, info = env.step(action, state, game_conn)
-            score += reward
-            
-        print('Episode:{} Score:{}'.format(run, score))
+                print("Episode:{} Score:{}".format(run, score))
 
     # # Main run loop is here!
     # try:

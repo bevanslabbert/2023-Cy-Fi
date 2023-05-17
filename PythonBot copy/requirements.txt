@@ -9,3 +9,4 @@ websocket-client==1.0.0
 gym
 keras
 tensorflow
+pygame

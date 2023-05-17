@@ -1,8 +1,10 @@
 import time
 import gym
 from gym.spaces import Discrete, Box
-from Game.action import Action
+from Game.action import Action, BotCommand
 from GameConnection import send
+import numpy as np
+import pygame
 
 
 class Environment(gym.Env):
@@ -20,26 +22,26 @@ class Environment(gym.Env):
         self.payload = state
 
         # Actions we can take
-        self.action_space = Discrete(len(Action))
+        self.action_space = Discrete(12)
 
         # Start state
-        self.state = state["heroWindow"]
-        self.collected = state["collected"]
+        self.state = state.bot_state["heroWindow"]
+        self.collected = state.bot_state["collected"]
         pass
 
     def step(self, action, state, game_conn):
-        send.send_action(game_conn, action.BotCommand(state.bot_id, action))
-
+        send.send_action(game_conn, BotCommand(state.bot_id, action))
+        reward = 0
         # Sleep until next tick updates hero state
         while self.state == state.bot_state["heroWindow"]:
             time.sleep(0.5)
 
         # If got a collectible, positive reward
-        if state.bot_state["collected"] > self.payload["collected"]:
+        if state.bot_state["collected"] > self.payload.bot_state["collected"]:
             reward += 1
 
         # If passed level, positive reward
-        if state.bot_state["level"] > self.payload["level"]:
+        if state.bot_state["currentLevel"] > self.payload.bot_state["currentLevel"]:
             reward += 100
 
         # If touching hazard, negative reward
@@ -64,47 +66,45 @@ class Environment(gym.Env):
         # Initialize Pygame
         pygame.init()
         window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-        pygame.display.set_caption("Block Renderer")
+        pygame.display.set_caption("Melkman")
 
         for row in range(GRID_HEIGHT):
-        for col in range(GRID_WIDTH):
-            # Calculate block position
-            x = col * BLOCK_SIZE
-            y = row * BLOCK_SIZE
+            for col in range(GRID_WIDTH):
+                # Calculate block position
+                x = col * BLOCK_SIZE
+                y = row * BLOCK_SIZE
 
-            # Get block color based on row number
-            if col % 2 == 0:
-                if row % 2 == 0:
-                    block_color = (255, 0, 0)
+                # Get block color based on row number
+                if col % 2 == 0:
+                    if row % 2 == 0:
+                        block_color = (255, 0, 0)
+                    else:
+                        block_color = (0, 255, 0)
                 else:
-                    block_color = (0, 255, 0)
-            else:
-                if row % 2 == 0:
-                    block_color = (0, 255, 0)
-                else:
-                    block_color = (255, 0, 0)
+                    if row % 2 == 0:
+                        block_color = (0, 255, 0)
+                    else:
+                        block_color = (255, 0, 0)
 
             # Draw block
             pygame.draw.rect(window, block_color, (x, y, BLOCK_SIZE, BLOCK_SIZE))
 
-            # Game loop
-running = True
-while running:
-    # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        # Game loop
+        running = True
+        while running:
+            # Handle events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-    # Clear the window
-    window.fill((255, 255, 255))
+            # Clear the window
+            window.fill((255, 255, 255))
 
-    # Render the grid
-    render_grid()
+            # Render the grid
+            render_grid()
 
-    # Update the display
-    pygame.display.update()
+            # Update the display
+            pygame.display.update()
 
-    # Quit the game
-    pygame.quit()
-
-        pass
+            # # Quit the game
+            # pygame.quit()
