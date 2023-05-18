@@ -49,7 +49,8 @@ class Environment(gym.Env):
         # Placeholder for info
         info = {}
 
-        self.state = state
+        self.state = state.bot_state['heroWindow']
+        self.payload = state
         return state.bot_state["heroWindow"], reward, False, info
 
     def reset(self):
@@ -58,62 +59,67 @@ class Environment(gym.Env):
         pass
 
     def render(self):
-        # Constants
-        WINDOW_WIDTH = 400
-        WINDOW_HEIGHT = 600
-        BLOCK_SIZE = 40
-        GRID_WIDTH = 10
-        GRID_HEIGHT = 16
+        if self.payload != None:
+            print('============================================================= RENDER ==========================================================')
+            print(self.payload.bot_state['heroWindow'])
+            # Constants
+            WINDOW_WIDTH = 400
+            WINDOW_HEIGHT = 600
+            BLOCK_SIZE = 40
+            GRID_WIDTH = len(self.state)
+            GRID_HEIGHT = len(self.state[0])
 
-        # Initialize Pygame
-        pygame.init()
-        window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-        pygame.display.set_caption("Melkman")
+            # Initialize Pygame
+            pygame.init()
+            window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+            pygame.display.set_caption("Melkman")
 
-        # Game loop
-        running = True
-        # while running:
-            # Handle events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
+            # Game loop
+            running = True
+            while running:
+                # Handle events
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
 
-            # Clear the window
-            window.fill((255, 255, 255))
+                # Clear the window
+                window.fill((255, 255, 255))
 
-            # Render the grid
-            for row in range(GRID_HEIGHT):
-                for col in range(GRID_WIDTH):
-                    # Calculate block position
-                    x = col * BLOCK_SIZE
-                    y = row * BLOCK_SIZE
+                # Render the grid
+                for row in range(GRID_WIDTH):
+                    for col in range(GRID_HEIGHT):
+                        # Calculate block position
+                        x = col * BLOCK_SIZE
+                        y = row * BLOCK_SIZE
+                        val =  self.payload.bot_state['heroWindow'][row][col]
+                        # Get block color based on row number
+                        if val == 0:
+                            block_color = (255, 255, 255)
+                        elif val == 1:
+                            # rgb for brown
+                            block_color = (150, 75, 0)
+                        elif val == 2:
+                            # rgb for gold
+                            block_color = (225,215,0)
+                        elif val == 3:
+                            block_color = (255,0,0)
+                        elif val == 4:
+                            block_color = (0,255,0)
+                        elif val == 5:
+                            block_color = (0,0,255)
+                        elif val == 6:
+                            # orange
+                            block_color = (255,165,0)
+                        else:
+                            
+                            block_color = (0,0,0)
+                        # Draw block
+                        pygame.draw.rect(
+                            window, block_color, (x, y, BLOCK_SIZE, BLOCK_SIZE)
+                        )
 
-                    # Get block color based on row number
-                    if self.state.bot_state['heroWindow'] == '0':
-                        pass
-                    elif self.state.bot_state['heroWindow'] == '1':
-                        # rgb for brown
-                        block_color = 
-                    elif self.state.bot_state['heroWindow'] == '2':
-                        # rgb for gold
-                        block_color = 
-                    elif self.state.bot_state['heroWindow'] == '3':
-                        block_color = (255,0,0)
-                    elif self.state.bot_state['heroWindow'] == '4':
-                        block_color = (0,255,0)
-                    elif self.state.bot_state['heroWindow'] == '5':
-                        block_color = (0,0,255)
-                    elif self.state.bot_state['heroWindow'] == '6':
-                        # orange
-                        block_color = 
-                    
-                    # Draw block
-                    pygame.draw.rect(
-                        window, block_color, (x, y, BLOCK_SIZE, BLOCK_SIZE)
-                    )
+                # Update the display
+                pygame.display.update()
 
-            # Update the display
-            pygame.display.update()
-
-        # Quit the game
-        pygame.quit()
+            # Quit the game
+            pygame.quit()
