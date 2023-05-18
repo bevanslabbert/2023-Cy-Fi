@@ -22,8 +22,8 @@ if __name__ == "__main__":
                 score = 0
 
                 while not done:
+                    
                     env.render()
-                    time.sleep(1)
                     action = env.action_space.sample()
                     n_state, reward, done, info = env.step(action, state, game_conn)
                     score += reward
