@@ -87,7 +87,7 @@ class Environment(gym.Env):
                     running = False
 
             # Clear the window
-                
+            # self.window.fill(0, 0, 0)
 
             # Render the grid
             for row in range(self.GRID_WIDTH):
@@ -106,17 +106,20 @@ class Environment(gym.Env):
                         # rgb for gold
                         block_color = (225,215,0)
                     elif val == 3:
+                        # red
                         block_color = (255,0,0)
                     elif val == 4:
+                        # green
                         block_color = (0,255,0)
                     elif val == 5:
+                        # blue
                         block_color = (0,0,255)
                     elif val == 6:
                         # orange
                         block_color = (255,165,0)
                     else:
-                        
                         block_color = (0,0,0)
+                        
                     # Draw block
                     pygame.draw.rect(
                         self.window, block_color, (x, y, self.BLOCK_SIZE, self.BLOCK_SIZE)
